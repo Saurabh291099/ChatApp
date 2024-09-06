@@ -1,10 +1,13 @@
 
 import { React, useState } from 'react'
 import './App.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Chat from './components/Chat'
 import Sidebar from './components/Sidebar'
 import './index.css'
 import data from './Data'
+import SignUp from './components/SignUp'
+import Login from './components/Login'
 const App = () => {
   const [chatData, setChatData] = useState(data);
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -44,8 +47,16 @@ const App = () => {
 
 
     <>
-      
-      <div className="relative grid grid-cols-12 gap-4">
+
+
+      <Routes>
+        <Route path="/" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+
+
+
+      {/* <div className="relative grid grid-cols-12 gap-4">
         <div className={`absolute md:relative md:block col-span-12 md:col-span-4 lg:col-span-3 ${currentUser ? 'hidden' : 'block'}`}>
           <Sidebar users={chatData} selectChat={selectChat} markAsUnread={markAsUnread} deleteChat={deleteChat} resetUnreadCount={resetUnreadCount} currentUserId={currentUserId} />
         </div>
@@ -58,7 +69,7 @@ const App = () => {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
 
     </>
   )
