@@ -5,7 +5,7 @@ const Chat = ({ user }) => {
     return (
         <>
 
-            <div className="grid grid-rows-12 py-0 md:py-4 px-0 md:px-2 lg:px-8 h-[100vh]">
+            <div className="grid grid-rows-12 py-0 md:py-4 px-0 md:px-2 lg:px-8 h-[100vh] bg-black">
 
                 <div className="w-full row-span-1 md:row-span-1 fixed top-0 md:relative z-10 ">
                     {/* <div className='flex flex-col gap-2'> */}
