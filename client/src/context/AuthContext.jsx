@@ -6,10 +6,11 @@ export const AuthContext = createContext()
 
 export const AuthoContextProvider = ({ children }) => {
 
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(null);
 
-    const { registerError, setRegisterError } = useState(null)
-    const { isRegisterLoading, setIsRegisterLoading } = useState(false)
+    const [registerError, setRegisterError] = useState(null);
+
+    const [isRegisterLoading, setIsRegisterLoading] = useState(false);
 
 
     const [registerInfo, setRegisterInfo] = useState({
@@ -17,38 +18,57 @@ export const AuthoContextProvider = ({ children }) => {
         email: '',
         password: '',
     });
-    console.log("registerInfo", registerInfo);
+    // console.log("registerInfo", registerInfo);
 
 
     const updateRegisterInfo = useCallback((info) => {
         setRegisterInfo(info)
     }, [])
 
+
     const registerUser = useCallback(async (e) => {
-        e.prventDefault();
+        e.preventDefault();
         setIsRegisterLoading(true)
         setRegisterError(null)
 
+        try {
+            const response = await postRequest(`${baseUrl}/users/register`, JSON.stringify(registerInfo));
 
-        const response = await postRequest(`${baseUrl}/users/register`, JSON.stringify(registerInfo));
+            // Log the response to console
+            console.log("Response from server:", response);
 
-        setIsRegisterLoading(false)
+            setIsRegisterLoading(false)
 
-        if (response.error) {
-            return setRegisterError(response);
+            if (response.error) {
+                return setRegisterError(response);
+            }
+
+            // Store user information and log the result
+
+            localStorage.setItem("User", JSON.stringify(response));
+            setUser(response);
+
+            console.log("user Register successfully:", response);
+        } catch (error) {
+            setIsRegisterLoading(false);
+            console.error("Network or server error:", error);
         }
 
-        localStorage.setItem("User", JSON.stringify(response))
-        setUser(response)
 
-    }, [registerInfo])
+    }, [registerInfo,]);
 
 
 
     return (
         <AuthContext.Provider
             value={{
-                user, registerInfo, updateRegisterInfo, registerError, registerUser, isRegisterLoading,
+                user,
+                registerInfo,
+                updateRegisterInfo,
+                registerError,
+                registerUser,
+                isRegisterLoading,
+                setIsRegisterLoading,
             }}>{children}
         </AuthContext.Provider>
     )
