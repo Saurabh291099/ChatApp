@@ -1,28 +1,46 @@
-import { createContext, useCallback, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { baseUrl, postRequest } from "../utils/services";
 
 
 export const AuthContext = createContext()
 
-export const AuthoContextProvider = ({ children }) => {
+export const AuthContextProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
 
     const [registerError, setRegisterError] = useState(null);
-
     const [isRegisterLoading, setIsRegisterLoading] = useState(false);
-
 
     const [registerInfo, setRegisterInfo] = useState({
         name: '',
         email: '',
         password: '',
     });
+
+
+    const [loginError, setLoginError] = useState(null);
+    const [isLoginLoading, setIsLoginLoading] = useState(false);
+    const [loginInfo, setLoginInfo] = useState({
+        email: '',
+        password: '',
+    });
     // console.log("registerInfo", registerInfo);
 
+    // console.log("User:", user);
+    // console.log("LoginInfo:", loginInfo);
+
+    useEffect(() => {
+        const user = localStorage.getItem("User");
+
+        setUser(JSON.parse(user));
+    }, []);
 
     const updateRegisterInfo = useCallback((info) => {
         setRegisterInfo(info)
+    }, [])
+
+    const updateLoginInfo = useCallback((info) => {
+        setLoginInfo(info)
     }, [])
 
 
@@ -58,6 +76,29 @@ export const AuthoContextProvider = ({ children }) => {
     }, [registerInfo,]);
 
 
+    const loginUser = useCallback(async (e) => {
+        e.preventDefault()
+        setIsLoginLoading(true)
+        setLoginError(null)
+
+        const response = await postRequest(
+            `${baseUrl}/users/login`,
+            JSON.stringify(loginInfo)
+        );
+        setIsLoginLoading(false)
+
+        if (response.error) {
+            return setLoginError(response)
+        }
+        localStorage.setItem("User", JSON.stringify(response))
+        setUser(response);
+
+    }, [loginInfo]);
+
+    const logOutUser = useCallback(() => {
+        localStorage.removeItem("User");
+        setUser(null);
+    }, []);
 
     return (
         <AuthContext.Provider
@@ -69,6 +110,12 @@ export const AuthoContextProvider = ({ children }) => {
                 registerUser,
                 isRegisterLoading,
                 setIsRegisterLoading,
+                logOutUser,
+                loginUser,
+                loginError,
+                loginInfo,
+                isLoginLoading,
+                updateLoginInfo,
             }}>{children}
         </AuthContext.Provider>
     )

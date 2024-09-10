@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import img from '../assets/react.svg'
 import data from '../Data'
 const Chat = ({ user }) => {
+
+   
     return (
         <>
+
 
             <div className="grid grid-rows-12 py-0 md:py-4 px-0 md:px-2 lg:px-8 h-[100vh] bg-black">
 
