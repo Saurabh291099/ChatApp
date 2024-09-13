@@ -9,9 +9,10 @@ export const ChatContext = createContext();
 export const ChatContextProvider = ({ children, user }) => {
 
     // State to hold the user's chats
-    const [userChats, setUserChats] = useState({
-        text:'hello darling'
-    });
+    // const [userChats, setUserChats] = useState({
+    //     text:'hello darling'
+    // });
+    const [userChats, setUserChats] = useState(null);
 
 
     // State to track whether the chats are being loaded (useful for showing a loading spinner)

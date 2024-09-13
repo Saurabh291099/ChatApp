@@ -1,9 +1,6 @@
 const chatModel = require("../Models/chatModel");
 
 // Create chat
-// Find User Chat
-// Find Chat 
-
 
 
 const createChat = async (req, res) => {
@@ -30,8 +27,10 @@ const createChat = async (req, res) => {
 };
 
 
+// Find User Chat
+
 const findUserChat = async(req, res)=>{
-    const userId = req.params.userId
+    const userId = req.params.userId;
 
     try{
         const chats = await chatModel.find({
@@ -45,6 +44,8 @@ const findUserChat = async(req, res)=>{
     }
 }
 
+
+// Find Chat 
 
 const findChat = async(req, res)=>{
     const {firstId, secondId} = req.params;
