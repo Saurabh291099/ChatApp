@@ -41,9 +41,6 @@ const registerUser = async (req, res) => {
 
 };
 
-
-
-
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -63,7 +60,6 @@ const loginUser = async (req, res) => {
     }
 };
 
-
 const findUser = async (req, res) => {
     const userId = req.params.userId;
     try {
@@ -76,16 +72,18 @@ const findUser = async (req, res) => {
     }
 }
 
-
 const getUsers = async (req, res) => {
-    
+
     try {
         const users = await userModel.find()
 
-        res.status(200).json(users)
+        // res.status(200).json(users);
+        res.json(users);
+        // console.log("users:", users)
     } catch (error) {
-        console.log(error)
-        res.status(500).json(error)
+        // console.log(error)
+        // res.status(500).json(error)
+        res.status(500).json({ error: 'Failed to fetch users' });
     }
 }
 

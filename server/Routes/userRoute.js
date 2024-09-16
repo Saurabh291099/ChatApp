@@ -10,7 +10,9 @@ const router = express.Router();
 // dynamic way of routing by controller 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/find/:userId", findUser);
+router.get("/users/find/:userId", findUser);
 router.get("/allusers", getUsers);
+router.get("/", getUsers);
 
+// console.log("users:", getUsers)
 module.exports = router;  

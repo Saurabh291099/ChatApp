@@ -26,7 +26,7 @@ export const AuthContextProvider = ({ children }) => {
     });
     // console.log("registerInfo", registerInfo);
 
-    // console.log("User:", user);
+    console.log("User:", user);
     // console.log("LoginInfo:", loginInfo);
 
     useEffect(() => {

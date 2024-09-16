@@ -22,10 +22,42 @@ export const ChatContextProvider = ({ children, user }) => {
     // State to hold any error that occurs while fetching the chats
     const [userChatsError, setUserChatsError] = useState(null);
 
+
+    const [potentialChat, setPotentialChat] = useState([])
+
+    useEffect(() => {
+        const getUsers = async () => {
+            const response = await getRequest(`${baseUrl}/users`);
+
+            if (response.error) {
+                return console.log("Error fetching users:", response.message)
+
+            }
+
+            const pChats = response.filter((u) => {
+                let isChatCreated = false;
+                if (user._id === u._id) return false;
+
+                if (userChats) {
+                    isChatCreated = userChats?.some((chat) => {
+                        return chat.members[0] === u._id || chat.members[1] === u._id
+                    });
+                }
+
+                return !isChatCreated;
+            });
+
+            setPotentialChat(pChats)
+        }
+
+        getUsers();
+
+    }, [userChats])
+
     // useEffect is used to fetch the user's chats when the component mounts or when the "user" changes
     useEffect(() => {
         // Log the current user information to help with debugging
-        console.log("User in ChatContextProvider:", user);
+        // console.log("User in ChatContextProvider:", user);
 
         // Function to fetch chats for the given user
         const getUserChats = async () => {
@@ -33,18 +65,14 @@ export const ChatContextProvider = ({ children, user }) => {
             // Check if the user has an ID (i.e., the user is logged in)
             if (user?._id) {
 
-                console.log("Fetching chats for user:", user._id);
-
+                // console.log("Fetching chats for user:", user._id);
                 // Indicate that we are starting to load the chats
                 setIsUserChatsLoading(true);
                 // Clear any previous errors
                 setUserChatsError(null);
 
-
                 // Make a GET request to fetch chats for this user from the server
                 const response = await getRequest(`${baseUrl}/chats/${user?._id}`);
-
-
 
                 // Loading is done, so set the loading state to false
                 setIsUserChatsLoading(false);
@@ -68,7 +96,8 @@ export const ChatContextProvider = ({ children, user }) => {
         value={{
             userChats,        // The fetched user chats
             userChatsError,   // Any error encountered while fetching chats
-            isUserChatsLoading // Loading state for user chats
+            isUserChatsLoading, // Loading state for user chats
+            potentialChat,
         }}>
 
         {/* Render the children components inside this provider */}

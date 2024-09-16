@@ -3,8 +3,13 @@ import Chat from './Chat'
 import Sidebar from './Sidebar'
 import data from '../Data'
 import { ChatContext } from '../context/ChatContext'
+import { AuthContext } from '../context/AuthContext'
+import Chats from './Chats'
+import PotentialChat from './PotentialChat'
 
 const ChatMain = () => {
+
+    const { user } = useContext(AuthContext);
 
     const { userChats, userChatsError, isUserChatsLoading } = useContext(ChatContext);
 
@@ -12,7 +17,9 @@ const ChatMain = () => {
     // if (isUserChatsLoading) return <div>Loading chats...</div>;
     // if (userChatsError) return <div>Error loading chats: {userChatsError.message}</div>;
 
-    console.log("Userchats:", userChats)
+
+    // console.log({ user })
+    // console.log("Userchats:", userChats)
 
 
     const [chatData, setChatData] = useState(data);
@@ -52,15 +59,44 @@ const ChatMain = () => {
     return (
         <>
 
-            {/* <div>
-                <h2>Your Chats</h2>
-                <pre>{JSON.stringify(userChats, null, 2)}</pre>
-            </div> */}
-
-
             <div className="relative grid grid-cols-12 gap-4">
+                {/* Guarding the map with userChats being an array */}
 
 
+                {/* <div className={`absolute md:relative md:block col-span-12 md:col-span-4 lg:col-span-3 border border-black ${currentUser ? 'hidden' : 'block'
+                    }`}>
+                    <PotentialChat />
+
+
+                    {userChats && userChats.length > 0 ? (
+                        userChats.map((chat, index) => {
+                            return (
+                                <div
+                                    key={index}
+                                >
+                                    <Chats chat={chat} user={user} />
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <div className="col-span-12">
+                            <h1 className="text-3xl font-semibold">No chats available</h1>
+                        </div>
+                    )}
+
+
+                </div> */}
+                {/* {userChats.map((chat, index) => {
+                    return (
+                        <>
+                            <div key={index} className={`absolute md:relative md:block col-span-12 md:col-span-4 lg:col-span-3 ${currentUser ? 'hidden' : 'block'}`}>
+                                <Chats chat={chat} user={user} />
+
+                            </div>
+                        </>
+
+                    )
+                })} */}
                 <div className={`absolute md:relative md:block col-span-12 md:col-span-4 lg:col-span-3 ${currentUser ? 'hidden' : 'block'}`}>
                     <Sidebar users={chatData} selectChat={selectChat} markAsUnread={markAsUnread} deleteChat={deleteChat} resetUnreadCount={resetUnreadCount} currentUserId={currentUserId} />
                 </div>
@@ -73,7 +109,7 @@ const ChatMain = () => {
                         </div>
                     )}
                 </div>
-            </div>
+            </div >
         </>
     )
 }
