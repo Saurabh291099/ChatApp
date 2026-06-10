@@ -1,14 +1,14 @@
 
-import { React, useContext, useState } from 'react'
+import { useContext } from 'react'
 import './App.css'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import './index.css'
 import SignUp from './components/SignUp'
 import Login from './components/Login'
 import { AuthContext } from './context/AuthContext';
 import ChatMain from './components/ChatMain';
 import Navbar from './components/Navbar';
-import { ChatContext, ChatContextProvider } from './context/ChatContext';
+import { ChatContextProvider } from './context/ChatContext';
 const App = () => {
 
 

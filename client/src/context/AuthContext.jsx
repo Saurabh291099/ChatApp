@@ -26,13 +26,12 @@ export const AuthContextProvider = ({ children }) => {
     });
     // console.log("registerInfo", registerInfo);
 
-    console.log("User:", user);
-    // console.log("LoginInfo:", loginInfo);
-
     useEffect(() => {
-        const user = localStorage.getItem("User");
+        const storedUser = localStorage.getItem("User");
 
-        setUser(JSON.parse(user));
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
     }, []);
 
     const updateRegisterInfo = useCallback((info) => {

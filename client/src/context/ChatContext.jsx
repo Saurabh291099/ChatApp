@@ -26,25 +26,25 @@ export const ChatContextProvider = ({ children, user }) => {
     const [potentialChat, setPotentialChat] = useState([])
 
     useEffect(() => {
+        if (!user?._id) return;
+
         const getUsers = async () => {
             const response = await getRequest(`${baseUrl}/users`);
 
             if (response.error) {
                 return console.log("Error fetching users:", response.message)
-
             }
 
             const pChats = response.filter((u) => {
-                let isChatCreated = false;
                 if (user._id === u._id) return false;
 
                 if (userChats) {
-                    isChatCreated = userChats?.some((chat) => {
+                    return !userChats.some((chat) => {
                         return chat.members[0] === u._id || chat.members[1] === u._id
                     });
                 }
 
-                return !isChatCreated;
+                return true;
             });
 
             setPotentialChat(pChats)
@@ -52,7 +52,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
         getUsers();
 
-    }, [userChats])
+    }, [user, userChats])
 
     // useEffect is used to fetch the user's chats when the component mounts or when the "user" changes
     useEffect(() => {

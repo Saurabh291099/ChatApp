@@ -5,55 +5,52 @@ const mongoose = require('mongoose');
 const userRoute = require("./Routes/userRoute");
 const chatRoute = require("./Routes/chatRoute");
 const messageRoute = require("./Routes/messageRoute");
-const { getUsers } = require('./Controllers/userController');
 
 require('dotenv').config();
 
-
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const uri = process.env.ATLAS_URI;
 
-app.use(express.json())
-
-
-// app.use(cors())
-
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
-
-
+app.use(express.json());
+app.use(cors());
 
 app.use("/api/users", userRoute);
 app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
 
-
-// CRUD Operations 
 app.get("/", (req, res) => {
     res.send("welcome to chat App API.....")
 });
 
+const connectDatabase = async () => {
+    if (uri) {
+        try {
+            await mongoose.connect(uri);
+            console.log("MongoDB connected using ATLAS_URI");
+            return;
+        } catch (error) {
+            console.log("Atlas connection failed:", error.message);
+        }
+    }
 
-// app.get('/', (req, res) => {
-//     res.send('Hello World!')
-// })
+    const { MongoMemoryServer } = require('mongodb-memory-server');
+    const memoryServer = await MongoMemoryServer.create();
+    const memoryUri = memoryServer.getUri();
 
-app.listen(port, (req, res) => {
-    console.log(`Example app listening on port: ${port}`);
-});
+    await mongoose.connect(memoryUri);
+    console.log("MongoDB connected using in-memory database (local development fallback)");
+};
 
+const startServer = async () => {
+    try {
+        await connectDatabase();
+        app.listen(port, () => {
+            console.log(`ChatApp server listening on port ${port}`);
+        });
+    } catch (error) {
+        console.log("Failed to start server:", error.message);
+        process.exit(1);
+    }
+};
 
-// app.get('/api/users', (req, res) => {
-
-//     res.json({ users: [] });
-// });
-
-
-mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => console.log("MongoDB Connection Estabished"))
-    .catch((error) => { console.log("MongoDb Connection Failed: ", error.message) })
+startServer();

@@ -4,6 +4,8 @@
   "description": "this is a chatapp server build by saurabh sharma.",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "saurabh sharma",
@@ -17,5 +19,8 @@
     "mongoose": "^8.6.1",
     "nodemon": "^3.1.4",
     "validator": "^13.12.0"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.2.0"
   }
 }
